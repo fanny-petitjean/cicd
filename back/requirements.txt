@@ -3,3 +3,4 @@ requests
 pytest
 requests_mock
 flask-testing
+flask_cors

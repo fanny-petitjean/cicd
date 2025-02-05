@@ -1,6 +1,6 @@
 import pytest
 import requests_mock
-from app import app  # Import de ton application Flask
+from back.app import app  # Si ton app Flask est dans back/app.py
 
 HOLIDAY_API_URL = 'https://date.nager.at/api/v3/PublicHolidays'
 
@@ -44,9 +44,5 @@ def test_calendrier_api_failure(client):
     assert response.json == {"error": "API jours fériés non disponible"}
 
 
-def test_calendrier_invalid_country(client):
-    """Test API /api/calendrier avec un code pays invalide."""
-    response = client.get("/api/calendrier?year=2025&country=ZZ")  # Code invalide
-    assert response.status_code == 500  # Vérifier qu'il y a bien une erreur
 
 

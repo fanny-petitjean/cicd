@@ -1,7 +1,6 @@
 import requests
 from flask import Flask, jsonify, request
-from flask_cors import CORS  # Pour autoriser le frontend à récupérer les données
-from routes.nouvelles import get_articles  # Cette fonction va récupérer les articles
+from flask_cors import CORS  
 
 app = Flask(__name__)
 
@@ -16,21 +15,18 @@ def index():
 
 @app.route('/api/meteo')
 def meteo():
-    # Effectuer l'appel API vers le service météo
     response = requests.get(METEO_API_URL, params={'api_key': API_KEY, 'city': 'Paris'})
     
     if response.status_code == 200:
-        # Traiter la réponse si elle est valide
         meteo_data = response.json()
         return jsonify(meteo_data)
     else:
-        # Retourner une erreur si l'appel échoue
         return jsonify({'error': 'API météo non disponible'}), 500
 
 @app.route('/api/calendrier')
 def calendrier():
     year = request.args.get('year', default=2025, type=int)
-    country_code = request.args.get('countryCode', default='FR', type=str).upper()  # Remplacer 'country' par 'countryCode'
+    country_code = request.args.get('countryCode', default='FR', type=str).upper() 
     
     response = requests.get(f"{HOLIDAY_API_URL}/{year}/{country_code}")
     
