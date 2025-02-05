@@ -1,15 +1,19 @@
-document.addEventListener("DOMContentLoaded", function() {
-    fetch('http://localhost:8080/api/nouvelles')  // Appelle l'API Flask
-    .then(response => response.json())
-    .then(data => {
-        let content = document.getElementById('news-container');
-        content.innerHTML = "";  // Efface "Chargement..."
-        data.forEach(article => {
-            let item = `<h3>${article.title}</h3>
-                        <a href="${article.url}" target="_blank">Lire l'article</a>
-                        <hr>`;
-            content.innerHTML += item;
-        });
-    })
-    .catch(error => console.error('Erreur:', error));
-});
+async function loadNouvelles() {
+    const response = await fetch("http://127.0.0.1:5000/api/nouvelles");
+    const articles = await response.json();
+    
+    let contentDiv = document.getElementById("content");
+    contentDiv.innerHTML = "<h2>Dernières nouvelles</h2>";
+    
+    articles.forEach(article => {
+        contentDiv.innerHTML += `<p><strong>${article.title}</strong> - <a href="${article.url}" target="_blank">Lire</a></p>`;
+    });
+}
+
+function loadMeteo() {
+    document.getElementById("content").innerHTML = "<h2>Page Météo</h2>";
+}
+
+function loadCalendrier() {
+    document.getElementById("content").innerHTML = "<h2>Page Calendrier</h2>";
+}
