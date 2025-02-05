@@ -1,6 +1,6 @@
 import pytest
 import requests_mock
-from back.app import app  # Si ton app Flask est dans back/app.py
+from app import app
 
 HOLIDAY_API_URL = 'https://date.nager.at/api/v3/PublicHolidays'
 
