@@ -86,13 +86,13 @@ jobs:
       # Run front-end container to test if the front-end is working
       - name: Run front-end Container
         run: |
-          docker run -d -p 80:80 --name my-python-frontend ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest
+          docker run -d -p 5001:5001 --name my-python-frontend ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest
 
       - name: Test if front-end Container is Running
         run: |
           sleep 5
           for i in {1..10}; do
-            if curl --fail http://127.0.0.1/; then
+            if curl --fail http://127.0.0.1:5001/; then
               echo "Front-end server is up!"
               exit 0
             fi
