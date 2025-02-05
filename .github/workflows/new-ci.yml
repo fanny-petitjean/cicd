@@ -42,37 +42,30 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      # Build the back-end Docker image
       - name: Build back-end Docker image
         run: |
           docker build -f back/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ./back
           
-      # Check if back-end Docker image exists
       - name: Check back-end Docker image
         run: |
           docker images ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend
 
-      # Build the front-end Docker image
       - name: Build front-end Docker image
         run: |
           docker build -f front/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest ./front
 
-      # Check if front-end Docker image exists
       - name: Check front-end Docker image
         run: |
           docker images ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend
 
-      # Tag back-end Docker image
       - name: Tag back-end Docker image
         run: |
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.sha }}
 
-      # Tag front-end Docker image
       - name: Tag front-end Docker image
         run: |
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:${{ github.sha }}
 
-      # Run back-end container to test if the back-end is working
       - name: Run back-end Container
         run: |
           docker run -d -p 5000:5000 --name my-python-backend ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest
@@ -91,7 +84,6 @@ jobs:
           echo "Back-end server did not start in time."
           exit 1
 
-      # Run front-end container to test if the front-end is working
       - name: Run front-end Container
         run: |
           docker run -d -p 5001:5001 --name my-python-frontend ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest
@@ -110,13 +102,11 @@ jobs:
           echo "Front-end server did not start in time."
           exit 1
 
-      # Push back-end Docker image to Docker Hub
       - name: Push back-end Docker image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.sha }}
 
-      # Push front-end Docker image to Docker Hub
       - name: Push front-end Docker image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest
