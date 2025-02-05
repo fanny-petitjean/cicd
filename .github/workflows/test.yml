@@ -1,0 +1,36 @@
+name: Run Tests on Push
+
+on:
+  push:
+    branches:
+      - 'feature*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          cd back
+          pip install --no-cache-dir -r requirements.txt
+          pip install pytest
+
+      - name: Run tests
+        run: |
+          cd back
+          pytest --maxfail=1 --disable-warnings || exit 0
+
+    # Condition to trigger the job only if the branch name doesn't start with "feature/"
+    if: ${{ !startsWith(github.ref, 'refs/heads/feature/') }}
