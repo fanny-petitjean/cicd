@@ -11,7 +11,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copier tout le code de l'application
-COPY . .
+COPY . /usr/src/app
 
 # Exposer le port sur lequel Flask va tourner
 EXPOSE 5000

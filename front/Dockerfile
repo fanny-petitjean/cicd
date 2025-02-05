@@ -6,7 +6,7 @@ COPY requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY . /usr/src/app
 
 EXPOSE 5001
 
