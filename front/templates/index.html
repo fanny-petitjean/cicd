@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Application</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <h1>Bienvenue sur la page d'accueil</h1>
+  <nav>
+    <a href="{{ url_for('meteo') }}">Page Météo</a>
+    <a href="{{ url_for('nouvelles') }}">Page Nouvelles</a>
+    <a href="{{ url_for('calendrier') }}">Page Calendrier</a>
+  </nav>
+
+  <div>
+    {% if content %}
+      <h2>{{ content }}</h2>
+    {% else %}
+      <h2>Page d'accueil</h2>
+    {% endif %}
+  </div>
+</body>
+</html>
