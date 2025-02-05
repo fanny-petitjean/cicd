@@ -7,6 +7,10 @@ app = Flask(__name__)
 METEO_API_URL = 'https://api.meteo.com/v1/weather'
 API_KEY = 'YOUR_API_KEY'
 
+@app.route('/')
+def index():
+    return 'Hello, World!'
+
 @app.route('/api/meteo')
 def meteo():
     # Effectuer l'appel API vers le service météo
