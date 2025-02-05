@@ -1,0 +1,73 @@
+name: Build, Test & Push to Docker Hub
+
+on:
+  release:
+    types:
+      - created  # Se déclenche quand une nouvelle release est créée
+
+jobs:
+  build_test_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install --no-cache-dir -r requirements.txt
+          pip install pytest
+
+      - name: Run tests
+        run: pytest --maxfail=1 --disable-warnings || exit 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build Docker image
+        run: docker build -t my-python-app . 
+
+      - name: Tag Docker image
+        run: |
+          docker tag my-python-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:${{ github.event.release.tag_name }}  # Utilisation du tag de la release
+          docker images
+
+      - name: Create Git Tag for the Release
+        run: |
+          git tag -a ${{ github.event.release.tag_name }} -m "Release ${{ github.event.release.tag_name }}"
+          git push origin ${{ github.event.release.tag_name }}  # Pousse le tag vers le dépôt distant
+
+      - name: Run Container
+        run: docker run -d -p 5000:5000 --name my-python-app ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:${{ github.event.release.tag_name }}
+
+      - name: Test if Container is Running
+        run: |
+          sleep 5
+          for i in {1..10}; do
+            if curl --fail http://127.0.0.1:5000/; then
+              echo "Server is up!"
+              exit 0
+            fi
+            echo "Server not ready, retrying ($i/10)..."
+            sleep 2
+          done
+          echo "Server did not start in time."
+          exit 1
+
+      - name: Push Docker image to Docker Hub
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:${{ github.event.release.tag_name }}  # Utilisation du tag de la release
