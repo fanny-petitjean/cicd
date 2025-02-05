@@ -1,4 +1,5 @@
 flask
 requests
 pytest
-
+requests_mock
+flask-testing

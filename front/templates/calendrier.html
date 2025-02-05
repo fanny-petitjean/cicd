@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendrier des Jours Fériés</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f4f4f9;
+    }
+    h2 {
+        color: #333;
+    }
+    form {
+        margin-bottom: 20px;
+    }
+    input[type="text"], input[type="number"] {
+        padding: 8px;
+        margin: 5px;
+        font-size: 14px;
+        width: 200px;
+    }
+    button {
+        padding: 8px 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    .holidays-list {
+        margin-top: 20px;
+    }
+    .holiday-item {
+        background-color: #fff;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .holiday-item h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+    }
+    .holiday-item p {
+        margin: 5px 0;
+        color: #555;
+    }
+    .error {
+        color: red;
+    }
+    nav {
+        margin-bottom: 20px;
+        background-color: #333;
+        padding: 10px;
+        text-align: center;
+    }
+    nav a {
+        color: white;
+        margin: 0 15px;
+        text-decoration: none;
+        font-size: 16px;
+    }
+    nav a:hover {
+        background-color: #45a049;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calendrier des Jours Fériés</h1>
+
+  <!-- Menu de navigation -->
+  <nav>
+    <a href="{{ url_for('meteo') }}">Page Météo</a>
+    <a href="{{ url_for('nouvelles') }}">Page Nouvelles</a>
+    <a href="{{ url_for('calendrier') }}">Page Calendrier</a>
+  </nav>
+
+  <form action="/calendrier" method="GET">
+    <label for="year">Année:</label>
+    <input type="number" id="year" name="year" value="2025" min="1900" max="2100" required>
+    
+    <label for="countryCode">Code du Pays (2 caractères):</label>
+    <input type="text" id="countryCode" name="countryCode" maxlength="2" required>
+
+    <button type="submit">Obtenir les Jours Fériés</button>
+  </form>
+
+  {% if holidays %}
+    <div class="holidays-list">
+      {% for holiday in holidays %}
+        <div class="holiday-item">
+          <h3>{{ holiday.name }} ({{ holiday.localName }})</h3>
+          <p>Date: {{ holiday.date }}</p>
+          <p>Type(s): {{ holiday.types | join(', ') }}</p>
+          <p>Global: {{ holiday.global }}</p>
+          <p>Fixed: {{ holiday.fixed }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="error">Aucun jour férié trouvé.</p>
+  {% endif %}
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
+</body>
+</html>

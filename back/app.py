@@ -1,5 +1,7 @@
 import requests
 from flask import Flask, jsonify, request
+from flask_cors import CORS  # Pour autoriser le frontend à récupérer les données
+from routes.nouvelles import get_articles  # Cette fonction va récupérer les articles
 
 app = Flask(__name__)
 
@@ -27,7 +29,6 @@ def meteo():
 
 @app.route('/api/calendrier')
 def calendrier():
-    # Récupérer les paramètres du formulaire
     year = request.args.get('year', default=2025, type=int)
     country_code = request.args.get('countryCode', default='FR', type=str).upper()  # Remplacer 'country' par 'countryCode'
     
