@@ -38,19 +38,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Set Docker image tag
-        run: |
-          if [[ "${{ github.event_name }}" == "release" ]]; then
-            echo "IMAGE_TAG=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
-          else
-            echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
-          fi
-
       - name: Build back-end Docker image
         run: |
           docker build -f back/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ./back
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:$IMAGE_TAG
-
+          
       - name: Check back-end Docker image
         run: |
           docker images ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend
@@ -58,11 +49,18 @@ jobs:
       - name: Build front-end Docker image
         run: |
           docker build -f front/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest ./front
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:$IMAGE_TAG
 
       - name: Check front-end Docker image
         run: |
           docker images ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend
+
+      - name: Tag back-end Docker image
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.event.release.tag_name }}
+
+      - name: Tag front-end Docker image
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:${{ github.event.release.tag_name }}
 
       - name: Run back-end Container
         run: |
@@ -103,9 +101,9 @@ jobs:
       - name: Push back-end Docker image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:$IMAGE_TAG
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.event.release.tag_name }}
 
       - name: Push front-end Docker image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:$IMAGE_TAG
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:${{ github.event.release.tag_name }}
