@@ -3,7 +3,7 @@ name: Build, Test & Push to Docker Hub
 on:
   release:
     types:
-      - created  # Se déclenche quand une nouvelle release est créée
+      - created  # Cela se déclenchera lors de la création d'une release
 
 jobs:
   build_test_push:
@@ -36,17 +36,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t my-python-app . 
+        run: docker build -t my-python-app:${{ github.event.release.tag_name }} .
 
       - name: Tag Docker image
         run: |
-          docker tag my-python-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:${{ github.event.release.tag_name }}  # Utilisation du tag de la release
+          docker tag my-python-app:${{ github.event.release.tag_name }} ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:${{ github.event.release.tag_name }}
           docker images
-
-      - name: Create Git Tag for the Release
-        run: |
-          git tag -a ${{ github.event.release.tag_name }} -m "Release ${{ github.event.release.tag_name }}"
-          git push origin ${{ github.event.release.tag_name }}  # Pousse le tag vers le dépôt distant
 
       - name: Run Container
         run: docker run -d -p 5000:5000 --name my-python-app ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:${{ github.event.release.tag_name }}
@@ -70,4 +65,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:${{ github.event.release.tag_name }}  # Utilisation du tag de la release
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-python-app:${{ github.event.release.tag_name }}

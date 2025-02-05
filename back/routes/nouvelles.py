@@ -1,3 +1,4 @@
+from flask import Blueprint, jsonify
 import requests
 
 def get_articles(limit=5):

@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from nouvelles import get_articles 
+from routes.nouvelles import get_articles
 
 app = Flask(__name__)
 
