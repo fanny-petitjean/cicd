@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from nouvelles import get_articles 
 
 app = Flask(__name__)
 
@@ -11,8 +12,10 @@ def meteo():
     return render_template('index.html', content="Page Météo")
 
 @app.route('/nouvelles')
+
 def nouvelles():
-    return render_template('index.html', content="Page Nouvelles")
+    articles = get_articles()
+    return render_template('nouvelles.html', articles=articles)  
 
 @app.route('/calendrier')
 def calendrier():
