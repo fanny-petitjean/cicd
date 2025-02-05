@@ -47,12 +47,12 @@ jobs:
       # Build the back-end Docker image
       - name: Build back-end Docker image
         run: |
-          docker build -f back/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest .
+          docker build -f back/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ./back
 
       # Build the front-end Docker image
       - name: Build front-end Docker image
         run: |
-          docker build -f front/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest .
+          docker build -f front/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest ./front
 
       # Tag back-end Docker image
       - name: Tag back-end Docker image
