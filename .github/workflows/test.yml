@@ -3,13 +3,13 @@ name: Run Tests on Push
 on:
   push:
     branches:
-      - 'feature*'
+      - 'feature/**'
   pull_request:
     branches:
       - main
 
 jobs:
-  test:
+  build_test:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,10 +27,50 @@ jobs:
           pip install --no-cache-dir -r requirements.txt
           pip install pytest
 
-      - name: Run tests
+      - name: Run tests for back-end
         run: |
           cd back
           pytest --maxfail=1 --disable-warnings || exit 0
 
-    # Condition to trigger the job only if the branch name doesn't start with "feature/"
-    if: ${{ !startsWith(github.ref, 'refs/heads/feature/') }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build back-end Docker image
+        run: |
+          docker build -f back/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ./back
+
+      - name: Check if back-end Docker image exists
+        run: |
+          docker images ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend
+
+      - name: Run back-end container
+        run: |
+          docker run -d -p 5000:5000 --name my-python-backend ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest
+
+      - name: Test if back-end API is running
+        run: |
+          sleep 5
+          for i in {1..10}; do
+            if curl --fail http://127.0.0.1:5000/api/calendrier?year=2025&country=FR; then
+              echo "✅ API is up and running!"
+              exit 0
+            fi
+            echo "API not ready, retrying ($i/10)..."
+            sleep 2
+          done
+          echo "❌ API did not start in time."
+          exit 1
+
+      - name: Push back-end Docker image to Docker Hub
+        if: success()
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.sha }}
+
