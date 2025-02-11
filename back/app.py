@@ -38,14 +38,14 @@ def calendrier():
 
 @app.route('/api/news')
 def get_articles():
-    #try:
+    try:
         response = requests.get(NEWS_API_URL)
         return response.json()
         if response.status_code == 200:
             data = response.json()  # C'est directement une liste d'articles
             return jsonify(data[:5])  # Retourner les 5 premiers articles
         return jsonify({'error': f'Erreur API Spaceflight News - Code {response.status_code}'}), response.status_code
-    #except requests.exceptions.RequestException as e:
+    except requests.exceptions.RequestException as e:
         return jsonify({'error': f'Exception: {str(e)}'}), 500
 
 
