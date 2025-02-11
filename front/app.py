@@ -13,9 +13,22 @@ def index():
 def meteo():
     return render_template('index.html', content="Page Météo")
 
-@app.route('/nouvelles')
-def nouvelles():
-    return render_template('index.html', content="Page Nouvelles")
+@app.route('/news')
+def news():
+    try:
+        response = requests.get(f"{BACKEND_URL}/api/news")
+        
+        if response.status_code == 200:
+            data = response.json()  
+            articles = data if isinstance(data, list) else []
+        else:
+            articles = []
+    except requests.exceptions.RequestException as e:
+        articles = []
+        print(f"Erreur lors de la récupération des articles : {e}")
+    
+    return render_template('news.html', articles=articles)
+
 
 @app.route('/calendrier', methods=['GET'])
 def calendrier():
