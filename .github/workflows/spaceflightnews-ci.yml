@@ -1,0 +1,32 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - feature/spaceflightnews  # Sur push dans la branche feature/spaceflightnews
+      - main  # Et aussi sur la branche principale
+  pull_request:
+    branches:
+      - main  # Lorsqu'une PR est ouverte sur la branche principale
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Utiliser un environnement Ubuntu pour l'exécution
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2  # Vérifie le code source du dépôt
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8  # Spécifie la version de Python que tu utilises
+
+      - name: Install dependencies from front/requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r front/requirements.txt  # Installe les dépendances depuis le fichier requirements.txt dans le sous-répertoire front
+
+      - name: Run tests
+        run: |
+          python -m unittest discover  # Lance les tests avec unittest (ou utilise pytest si tu préfères)
