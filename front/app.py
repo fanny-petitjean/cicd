@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request
 import requests
+import logging
 
 app = Flask(__name__)
+
+# Configurer la journalisation
+logging.basicConfig(level=logging.DEBUG)
 
 # URL du backend (pointant vers le service Docker nommé "back")
 BACKEND_URL = "http://back:5000"
