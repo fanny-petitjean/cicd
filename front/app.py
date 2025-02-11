@@ -16,11 +16,11 @@ def meteo():
 @app.route('/news')
 def news():
     try:
-        # Faire la requête pour récupérer les articles
         response = requests.get(f"{BACKEND_URL}/api/news")
         
         if response.status_code == 200:
-            articles = response.json()  # Récupérer la réponse JSON
+            data = response.json()  
+            articles = data if isinstance(data, list) else []
         else:
             articles = []
     except requests.exceptions.RequestException as e:
@@ -28,6 +28,7 @@ def news():
         print(f"Erreur lors de la récupération des articles : {e}")
     
     return render_template('news.html', articles=articles)
+
 
 @app.route('/calendrier', methods=['GET'])
 def calendrier():
