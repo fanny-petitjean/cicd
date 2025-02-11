@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 import requests
 
 app = Flask(__name__)
 
 # URL du backend (pointant vers le service Docker nommé "back")
-BACKEND_URL = "http://back:5000/"
+BACKEND_URL = "http://back:5000"  # Nom du service Docker
 
 @app.route('/')
 def index():
@@ -12,9 +12,9 @@ def index():
 
 @app.route('/alertes', methods=['GET', 'POST'])
 def alertes():
-    state = ""  # État par défaut vide
+    state = "CA"  # Valeur par défaut
     if request.method == "POST":  # Si l'utilisateur soumet un état via le formulaire
-        state = request.form.get("state")
+        state = request.form.get("state", "CA").strip()
 
     try:
         # Envoie une requête au backend avec l'état
