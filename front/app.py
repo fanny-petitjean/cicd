@@ -4,7 +4,7 @@ import requests
 app = Flask(__name__)
 
 # URL du backend (pointant vers le service Docker nommé "back")
-BACKEND_URL = "http://back:5000"  # Nom du service Docker
+BACKEND_URL = "http://back:5000"
 
 @app.route('/')
 def index():
@@ -18,7 +18,7 @@ def alertes():
 
     try:
         # Envoie une requête au backend avec l'état
-        response = requests.get(f"{BACKEND_URL}?state={state}")
+        response = requests.get(f"{BACKEND_URL}/api/alerts?state={state}")
         response.raise_for_status()  # Vérifie les erreurs HTTP
         alertes_data = response.json()  # Récupère les données JSON
         return render_template('alertes.html', alertes=alertes_data, state=state)

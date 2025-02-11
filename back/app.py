@@ -20,9 +20,10 @@ def alerts():
 
     try:
         alerts_url = f"https://api.weather.gov/alerts/active?area={state}"
-        print(f"Requête envoyée à l'API : {alerts_url}")
         response = requests.get(alerts_url, headers=HEADERS)
+        print(f"Requête envoyée : {alerts_url}")
         print(f"Statut de la réponse : {response.status_code}")
+        print(f"Contenu de la réponse : {response.text}")
 
         if response.status_code != 200:
             print(f"Erreur API : {response.text}")
