@@ -6,15 +6,21 @@
     <title>Actualités</title>
 </head>
 <body>
-    <h1>Actualités Spatiales</h1>
-    <ul>
-        {% for article in articles %}
-            <li>
-                <h2>{{ article.title }}</h2>
-                <p>{{ article.summary }}</p>
-                <a href="{{ article.url }}" target="_blank">Lire l'article</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <h1>Actualités</h1>
+
+    {% if articles %}
+        <ul>
+            {% for article in articles %}
+                <li>
+                    <h2>{{ article.get('title', 'Titre indisponible') }}</h2>
+                    <img src="{{ article.get('image_url', '') }}" alt="Image de l'article" style="width: 300px;">
+                    <p>{{ article.get('summary', 'Résumé indisponible') }}</p>
+                    <a href="{{ article.get('url', '#') }}">Lire l'article</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun article disponible.</p>
+    {% endif %}
 </body>
 </html>

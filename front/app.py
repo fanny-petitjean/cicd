@@ -16,18 +16,17 @@ def meteo():
 @app.route('/news')
 def news():
     try:
-        # Appel au backend pour récupérer les articles
+        # Faire la requête pour récupérer les articles
         response = requests.get(f"{BACKEND_URL}/api/news")
-
+        
         if response.status_code == 200:
-            articles = response.json()  # Récupérer la liste des articles
+            articles = response.json()  # Récupérer la réponse JSON
         else:
-            articles = [{"title": "Erreur", "summary": "Impossible de récupérer les actualités"}]
-
-    except requests.exceptions.RequestException:
-        articles = [{"title": "Erreur", "summary": "Le serveur des actualités est inaccessible"}]
-
-    # Retourner la page avec les articles récupérés
+            articles = []
+    except requests.exceptions.RequestException as e:
+        articles = []
+        print(f"Erreur lors de la récupération des articles : {e}")
+    
     return render_template('news.html', articles=articles)
 
 @app.route('/calendrier', methods=['GET'])
