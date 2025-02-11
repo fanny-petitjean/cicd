@@ -54,3 +54,5 @@ def test_news_page(client):
     assert b"Article 2" in response.data
     assert b"http://example.com/image1.jpg" in response.data
     assert b"http://example.com/image2.jpg" in response.data
+
+#essai d'un nouveau test
