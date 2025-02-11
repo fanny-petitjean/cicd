@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+
+{% block content %}
+    <h1>Alertes Météo</h1>
+
+    <form method="POST" action="/alertes">
+        <label for="state">Entrez un État US (ex: CA, NY, TX) :</label>
+        <input type="text" id="state" name="state" value="{{ state }}" required>
+        <button type="submit">Rechercher</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% elif alertes %}
+        {% for alerte in alertes %}
+            <div style="border: 1px solid black; padding: 10px; margin: 10px 0;">
+                <h2>{{ alerte.title }}</h2>
+                <p><strong>Gravité :</strong> {{ alerte.severity }}</p>
+                <p><strong>Urgence :</strong> {{ alerte.urgency }}</p>
+                <p><strong>Région :</strong> {{ alerte.areaDesc }}</p>
+                <p><strong>Début :</strong> {{ alerte.effective }}</p>
+                <p><strong>Expiration :</strong> {{ alerte.expires }}</p>
+                <p><strong>Description :</strong> {{ alerte.description }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Aucune alerte en cours pour {{ state }}.</p>
+    {% endif %}
+{% endblock %}
