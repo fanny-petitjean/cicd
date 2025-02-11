@@ -3,7 +3,7 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-BACKEND_URL = "http://127.0.0.1:5000"  # L'URL du backend dans Docker
+BACKEND_URL = "http://back:5000"  # L'URL du backend dans Docker
 
 @app.route('/')
 def index():

@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon Application</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div class="menu">
-        <a href="#" onclick="loadMeteo()">Météo</a>
-        <a href="#" onclick="loadNews()">News</a>
-        <a href="#" onclick="loadCalendrier()">Calendrier</a>
-    </div>
+  <h1>Bienvenue sur la page d'accueil</h1>
+  <nav>
+    <a href="{{ url_for('meteo') }}">Page Météo</a>
+    <a href="{{ url_for('news') }}">Page News</a>
+    <a href="{{ url_for('calendrier') }}">Page Calendrier</a>
+  </nav>
 
-    <div class="content" id="content">
-        {% block content %}
-        <p>Bienvenue sur notre site !</p>
-        {% endblock %}
-    </div>
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <div>
+    {% if content %}
+      <h2>{{ content }}</h2>
+    {% else %}
+      <h2>Page d'accueil</h2>
+    {% endif %}
+  </div>
 </body>
 </html>

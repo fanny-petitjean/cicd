@@ -18,7 +18,6 @@ def index():
 @app.route('/api/meteo')
 def meteo():
     response = requests.get(METEO_API_URL, params={'api_key': API_KEY, 'city': 'Paris'})
-    
     if response.status_code == 200:
         meteo_data = response.json()
         return jsonify(meteo_data)
@@ -39,19 +38,16 @@ def calendrier():
 
 @app.route('/api/news')
 def get_articles():
-    try:
+    #try:
         response = requests.get(NEWS_API_URL)
-        
+        return response.json()
         if response.status_code == 200:
             data = response.json()  # C'est directement une liste d'articles
-
-            # Retourner les 5 premiers articles
-            return jsonify(data[:5])  # Pas besoin de .get(), directement une liste
-
+            return jsonify(data[:5])  # Retourner les 5 premiers articles
         return jsonify({'error': f'Erreur API Spaceflight News - Code {response.status_code}'}), response.status_code
-
-    except requests.exceptions.RequestException as e:
+    #except requests.exceptions.RequestException as e:
         return jsonify({'error': f'Exception: {str(e)}'}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
