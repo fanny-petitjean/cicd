@@ -9,6 +9,8 @@ HOLIDAY_API_URL = 'https://date.nager.at/api/v3/PublicHolidays'
 METEO_API_URL = 'https://api.meteo.com/v1/weather'
 API_KEY = 'YOUR_API_KEY'
 
+NEWS_API_URL = "https://api.spaceflightnewsapi.net/v4/articles/"
+
 @app.route('/')
 def index():
     return 'Hello, World!'
@@ -35,7 +37,16 @@ def calendrier():
     else:
         return jsonify({'error': 'API jours fériés non disponible'}), 500
 
-    
+@app.route('/api/news')
+def get_articles():
+    response = requests.get(NEWS_API_URL)
+
+    if response.status_code == 200:
+        data = response.json()
+        return jsonify(data.get("articles", data)[:5])  # Vérifie si "articles" existe, sinon prend la racine
+
+    return jsonify({'error': 'API Spaceflight News non disponible'}), 500
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 

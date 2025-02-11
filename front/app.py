@@ -13,9 +13,9 @@ def index():
 def meteo():
     return render_template('index.html', content="Page Météo")
 
-@app.route('/nouvelles')
-def nouvelles():
-    return render_template('index.html', content="Page Nouvelles")
+@app.route('/news')
+def news():
+    return render_template('index.html', content="Page News")
 
 @app.route('/calendrier', methods=['GET'])
 def calendrier():
