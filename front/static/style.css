@@ -1,10 +1,67 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
-}
-h1 {
-    color: #007bff;
-}
-#news-container {
+    padding: 20px;
+    background-color: #f4f4f9;
+  }
+  h2 {
+    color: #333;
+  }
+  form {
+    margin-bottom: 20px;
+  }
+  input[type="text"], input[type="number"] {
+    padding: 8px;
+    margin: 5px;
+    font-size: 14px;
+    width: 200px;
+  }
+  button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  .holidays-list {
     margin-top: 20px;
-}
+  }
+  .holiday-item {
+    background-color: #fff;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .holiday-item h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+  }
+  .holiday-item p {
+    margin: 5px 0;
+    color: #555;
+  }
+  .error {
+    color: red;
+  }
+  nav {
+    margin-bottom: 20px;
+    background-color: #333;
+    padding: 10px;
+    text-align: center;
+  }
+  nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    font-size: 16px;
+  }
+  nav a:hover {
+    background-color: #45a049;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }

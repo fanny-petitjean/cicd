@@ -1,10 +1,18 @@
 import requests
 from flask import Flask, jsonify
 from flask_cors import CORS  # Pour autoriser le frontend à récupérer les données
-from routes.nouvelles import get_articles  # Cette fonction va récupérer les articles
 
 app = Flask(__name__)
 CORS(app)  # Permet au frontend d'accéder à l'API
+
+def get_articles():
+    url = "https://api.spaceflightnewsapi.net/v4/articles/"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data["results"][:5]  # On prend les 5 premiers articles
+    return []
+
 
 @app.route('/api/nouvelles')
 def nouvelles():
