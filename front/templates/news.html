@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Actualités</title>
+  <title>Page de News spatiales</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <style>
     body {
@@ -68,11 +68,11 @@
 </head>
 <body>
 
-  <h1>Actualités</h1>
+  <h1>Page de News spatiales</h1>
 
   <!-- Menu de navigation -->
   <nav>
-    <a href="{{ url_for('meteo') }}">Page Météo</a>
+    <a href="{{ url_for('alertes') }}">Page Météo</a>
     <a href="{{ url_for('news') }}">Page News</a>
     <a href="{{ url_for('calendrier') }}">Page Calendrier</a>
   </nav>
