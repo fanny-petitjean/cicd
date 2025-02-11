@@ -19,8 +19,6 @@ function loadNews() {
         });
 }
 
-
-
 function loadMeteo() {
     document.getElementById("content").innerHTML = "<h2>Page Météo</h2>";
 }

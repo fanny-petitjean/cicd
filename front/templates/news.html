@@ -1,26 +1,102 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Actualités</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Actualités</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f9;
+    }
+    h1 {
+      color: #333;
+    }
+    nav {
+      margin-bottom: 20px;
+      background-color: #333;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    nav a:hover {
+      background-color: #45a049;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    .articles-list {
+      margin-top: 20px;
+    }
+    .article-item {
+      background-color: #fff;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .article-item h2 {
+      margin: 0;
+      font-size: 18px;
+      color: #333;
+    }
+    .article-item img {
+      width: 300px;
+      margin-top: 10px;
+    }
+    .article-item p {
+      margin: 5px 0;
+      color: #555;
+    }
+    .article-item a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+    .article-item a:hover {
+      text-decoration: underline;
+    }
+    .error {
+      color: red;
+    }
+  </style>
 </head>
 <body>
-    <h1>Actualités</h1>
 
-    {% if articles %}
-        <ul>
-            {% for article in articles %}
-                <li>
-                    <h2>{{ article.get('title', 'Titre indisponible') }}</h2>
-                    <img src="{{ article.get('image_url', '') }}" alt="Image de l'article" style="width: 300px;">
-                    <p>{{ article.get('summary', 'Résumé indisponible') }}</p>
-                    <a href="{{ article.get('url', '#') }}">Lire l'article</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Aucun article disponible.</p>
-    {% endif %}
+  <h1>Actualités</h1>
+
+  <!-- Menu de navigation -->
+  <nav>
+    <a href="{{ url_for('meteo') }}">Page Météo</a>
+    <a href="{{ url_for('news') }}">Page News</a>
+    <a href="{{ url_for('calendrier') }}">Page Calendrier</a>
+  </nav>
+
+  {% if articles %}
+    <div class="articles-list">
+      {% for article in articles %}
+        <div class="article-item">
+          <h2>{{ article.get('title', 'Titre indisponible') }}</h2>
+          {% if article.get('image_url') %}
+            <img src="{{ article.get('image_url') }}" alt="Image de l'article">
+          {% endif %}
+          <p>{{ article.get('summary', 'Résumé indisponible') }}</p>
+          <a href="{{ article.get('url', '#') }}" target="_blank">Lire l'article</a>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="error">Aucun article disponible.</p>
+  {% endif %}
+
+  {% if error %}
+    <p class="error">{{ error }}</p>
+  {% endif %}
+
 </body>
 </html>
