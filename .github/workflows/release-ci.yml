@@ -1,12 +1,9 @@
 name: Build, Test & Push to Docker Hub
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  release:
+    types:
+      - created
 
 jobs:
   build_test_push:
@@ -59,11 +56,11 @@ jobs:
 
       - name: Tag back-end Docker image
         run: |
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.sha }}
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.event.release.tag_name }}
 
       - name: Tag front-end Docker image
         run: |
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:${{ github.sha }}
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:${{ github.event.release.tag_name }}
 
       - name: Run back-end Container
         run: |
@@ -104,9 +101,9 @@ jobs:
       - name: Push back-end Docker image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.event.release.tag_name }}
 
       - name: Push front-end Docker image to Docker Hub
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-frontend:${{ github.event.release.tag_name }}

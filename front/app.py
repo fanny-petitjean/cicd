@@ -1,6 +1,9 @@
-from flask import Flask, render_template
+import requests
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
+
+BACKEND_URL = "http://127.0.0.1:5000"  # L'URL du backend dans Docker
 
 @app.route('/')
 def index():
@@ -14,9 +17,27 @@ def meteo():
 def nouvelles():
     return render_template('index.html', content="Page Nouvelles")
 
-@app.route('/calendrier')
+@app.route('/calendrier', methods=['GET'])
 def calendrier():
-    return render_template('index.html', content="Page Calendrier")
+    # Récupérer les paramètres du formulaire
+    year = request.args.get('year', default=2025, type=int)
+    country_code = request.args.get('countryCode', default='US', type=str).upper()
+
+    try:
+        # Appel au back-end pour récupérer les jours fériés
+        response = requests.get(f"{BACKEND_URL}/api/calendrier", params={"year": year, "countryCode": country_code})
+
+        if response.status_code == 200:
+            holidays = response.json()  # Récupérer la réponse JSON du back-end
+        else:
+            holidays = [{"error": "Erreur lors de la récupération des jours fériés"}]
+    
+    except requests.exceptions.RequestException:
+        holidays = [{"error": "Impossible de contacter le back-end"}]
+    print(holidays)  # Affiche la variable 'holidays' dans la console
+
+    # Retourner la page avec les résultats des jours fériés
+    return render_template('calendrier.html', holidays=holidays)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)  # Frontend sur le port 5001

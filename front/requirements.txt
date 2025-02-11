@@ -2,4 +2,5 @@ flask
 flask_cors
 requests
 pytest
-
+requests_mock
+flask-testing
