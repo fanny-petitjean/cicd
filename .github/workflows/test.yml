@@ -43,22 +43,22 @@ jobs:
 
       - name: Build back-end Docker image
         run: |
-          docker build -f back/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ./back
+          docker build -f back/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/my-python-weather:latest ./back
 
       - name: Check if back-end Docker image exists
         run: |
-          docker images ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend
+          docker images ${{ secrets.DOCKERHUB_USERNAME }}/my-python-weather
 
       - name: Run back-end container
         run: |
-          docker run -d -p 5000:5000 --name my-python-backend ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest
+          docker run -d -p 5000:5000 --name my-python-weather ${{ secrets.DOCKERHUB_USERNAME }}/my-python-weather:latest
 
       - name: Test if back-end API is running
         run: |
           sleep 5
           for i in {1..10}; do
-            if curl --fail http://127.0.0.1:5000/api/calendrier?year=2025&country=FR; then
-              echo "✅ API is up and running!"
+            if curl --fail http://127.0.0.1:5000/api/alerts?state=CA; then
+              echo "✅ Weather API is up and running!"
               exit 0
             fi
             echo "API not ready, retrying ($i/10)..."
@@ -66,11 +66,23 @@ jobs:
           done
           echo "❌ API did not start in time."
           exit 1
+      - name: Test if back-end API is running
+        run: |
+          sleep 5
+          for i in {1..10}; do
+            if curl --fail http://127.0.0.1:5000/api/calendrier?year=2025&country=FR; then
+              echo "API is running!"
+              exit 0
+            fi
+            echo "API not ready, retrying ($i/10)..."
+            sleep 2
+          done
+          echo "API did not start in time."
+          exit 1    
 
       - name: Push back-end Docker image to Docker Hub
         if: success()
         run: |
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.sha }}
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-backend:${{ github.sha }}
-
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/my-python-weather:latest ${{ secrets.DOCKERHUB_USERNAME }}/my-python-weather:${{ github.sha }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-weather:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-python-weather:${{ github.sha }}

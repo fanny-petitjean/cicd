@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alertes Météo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <h1>Bienvenue sur la page des alertes météo</h1>
+  <nav>
+    <a href="{{ url_for('index') }}">Accueil</a>
+    <a href="{{ url_for('alertes') }}">Page Météo</a>
+    <a href="{{ url_for('nouvelles') }}">Page Nouvelles</a>
+    <a href="{{ url_for('calendrier') }}">Page Calendrier</a>
+  </nav>
+
+  <div>
+    <h2>Rechercher des alertes météo</h2>
+    <form method="POST" action="/alertes">
+        <label for="state">Entrez un État US (ex: CA, NY, TX) :</label>
+        <input type="text" id="state" name="state" value="{{ state }}" required>
+        <button type="submit">Rechercher</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% elif alertes %}
+        <h2>Alertes Météo Actuelles</h2>
+        {% for alerte in alertes %}
+            <div style="border: 1px solid black; padding: 10px; margin: 10px 0;">
+                <h3>{{ alerte.title }}</h3>
+                <p><strong>Gravité :</strong> {{ alerte.severity }}</p>
+                <p><strong>Urgence :</strong> {{ alerte.urgency }}</p>
+                <p><strong>Région :</strong> {{ alerte.areaDesc }}</p>
+                <p><strong>Début :</strong> {{ alerte.effective }}</p>
+                <p><strong>Expiration :</strong> {{ alerte.expires }}</p>
+                <p><strong>Description :</strong> {{ alerte.description }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Aucune alerte en cours pour {{ state }}.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
